@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
-import { WiDaySunny, WiRain, WiSnow, WiCloudy, WiFog, WiThunderstorm, WiDrizzle, WiHumidity, WiStrongWind, WiAlien } from 'react-icons/wi';
+import { WiDaySunny, WiRain, WiSnow, WiCloudy, WiFog, WiThunderstorm, WiHumidity, WiStrongWind, WiAlien } from 'react-icons/wi';
 import { useTheme } from '../ThemeContext';
 import city from '../asset/city.jpg';
 import city1 from '../asset/city1.jpg';
@@ -10,7 +10,7 @@ import background1 from '../asset/background1.jpg';
 
 const Weather = () => {
   const [location, setLocation] = useState('Delhi'); // Default location
-  const [weather, setWeather] = useState(null); // Single weather data object
+  const [weather, setWeather] = useState(null); 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [backgroundIndex, setBackgroundIndex] = useState(0);
@@ -22,8 +22,10 @@ const Weather = () => {
 
 
   useEffect(() => {
+    
     fetchWeather();
-  }, []); // Fetch weather data initially for the default location
+    // eslint-disable-next-line
+  },[] ); // Fetch weather data initially for the default location
 
   const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
@@ -37,14 +39,15 @@ const Weather = () => {
       );
       setWeather(response.data);
       setLoading(false);
-       // Change the background image index
-    setBackgroundIndex(prevIndex => (prevIndex + 1) % backgroundImages.length);
+       // Change the background image index when loaded for the default location
+    // setBackgroundIndex(prevIndex => (prevIndex + 1) % backgroundImages.length);
     } catch (err) {
       setError('Could not fetch weather data. Please try again.');
       setLoading(false);
     }
   };
 
+  //  to display icon based on weather
   const getWeatherIcon = (main) => {
     switch (main) {
       case 'Clear':
@@ -68,6 +71,8 @@ const Weather = () => {
     }
   };
 
+
+  // search bar function to search diffrent location
   const handleSearch = async () => {
     if (location) {
       try {
@@ -75,8 +80,12 @@ const Weather = () => {
           `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=metric`
         );
         setWeather(response.data);
+
+        // chnage bg on every new location 
         setBackgroundIndex(prevIndex => (prevIndex + 1) % backgroundImages.length);
+
         setError(null);
+
       } catch (err) {
         console.log(err);
         if (err.response && err.response.status === 404) {
